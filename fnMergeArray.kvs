@@ -1,0 +1,53 @@
+/* this function will merge two arrays together
+   By default the function will append the first argument with the second argument.
+   If the third argument is $true it will merge the arrays so all the values are unique (no duplicate values)
+   If the fourth argument is $true it will sort the values alphabetically while merging
+
+$0 - array: array1
+$1 - array: array2
+$2 - boolean: unique - set to true if you want no duplicate values in the resulting array
+$3 - boolean: sortMerge - set to true if you want the values of the merged result array to be sorted alphabetically
+*/
+
+%success = $false
+if ($typeOf($0) == array) {%arr1 = $0;}
+if ($typeOf($1) == array) {%arr2 = $1;}
+if ($typeOf($2) == boolean) {%unique = $2;}
+if ($typeOf($3) == boolean) {%sortMerge = $3;}
+
+if (%arr1 && %arr2)
+{
+	%arr1Length = %arr1[]#
+	%diff = 0
+	for (%i = 0; %i < %arr2[]#; %i++)
+	{
+		if (!$isEmpty(%arr2[%i]))
+		{
+			if (%unique)
+			{
+				if (!$str.grep(%arr2[%i],%arr1))
+				{
+					%arr1[$(%arr1Length + %i - %diff)] = %arr2[%i];
+				}
+				else
+				{
+					%diff++
+				}
+			}
+			else
+			{
+				%arr1[$(%arr1Length + %i - %diff)] = %arr2[%i];
+			}
+		}
+	}
+	if (%sortMerge)
+	{
+		%arr1 = $sort(%arr1)
+	}
+	%success = %arr1
+}
+else
+{
+	debug -c Data type mismatch. One or more of the arguments was not type: 'array'. Check data and retry.;
+}
+return %success
