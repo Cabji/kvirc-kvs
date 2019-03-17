@@ -1,0 +1,48 @@
+/* This function will iterative search an array's values and return a result depending on the flag parameter
+
+	YOU CAN PASS THIS FUNCTION AN UNSORTED ARRAY
+
+$0 - (string) string: the token to search for
+$1 - (array) array: the array to search
+$2 - (string) returnFlag: a modifier flag to change what we return as the return value
+	the flag options are: 
+	 value - returns the value we found in array that matches string
+	 index - returns the index number of the value we found in array that matches string
+	if no flag is passed index is the default.
+$3 - (string) matchModifier: modifier flags that can be used for $str.match function, alters how the search matching is done
+	default is 'e' (exact match)
+$4 - (bool) caseSensitivity: if true the search is case sensitive
+	default is $false (case insensitive)
+
+DEV-NOTE: THIS FUNCTION RETURNS $null IF NO MATCH IS FOUND BECASUE 0 IS A VALID RETURN VALUE AND $false RETURNS AS 0
+*/
+
+%string = $0
+%array = $1
+
+if ($2) %flag = $2; else %flag = index;
+if ($3) %matchMod = $3; else %matchMod = e;
+if ($4) %caseSense = $4; else %caseSense = $false;
+
+%noMatch = $true
+%return = $null
+
+for (%i = 0; %i < %array[]#; %i++)
+{
+	if ($str.match(%string,%array[%i],%matchMod,%caseSense))
+	{
+		switch(%flag)
+		{
+			case(value):
+			%return = %array[%i];
+			break;
+			default:
+			%return = %i;
+			break;
+		}
+		%noMatch = $false;
+	}
+	if (!%noMatch) {break;}
+}
+
+return %return;
