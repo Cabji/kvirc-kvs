@@ -14,7 +14,7 @@ $3 - (string) matchModifier: modifier flags that can be used for $str.match func
 $4 - (bool) caseSensitivity: if true the search is case sensitive
 	default is $false (case insensitive)
 
-DEV-NOTE: THIS FUNCTION RETURNS $null IF NO MATCH IS FOUND BECASUE 0 IS A VALID RETURN VALUE AND $false RETURNS AS 0
+DEV-NOTE: THIS FUNCTION RETURNS string "-1" IF NO MATCH IS FOUND BECASUE 0 IS A VALID RETURN VALUE AND $false RETURNS AS 0
 */
 
 %string = $0
@@ -25,7 +25,7 @@ if ($3) %matchMod = $3; else %matchMod = e;
 if ($4) %caseSense = $4; else %caseSense = $false;
 
 %noMatch = $true
-%return = $null
+%return = "-1"
 
 for (%i = 0; %i < %array[]#; %i++)
 {
