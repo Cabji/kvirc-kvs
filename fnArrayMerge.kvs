@@ -5,40 +5,52 @@
 
 $0 - array: array1
 $1 - array: array2
-$2 - boolean: unique - set to true if you want no duplicate values in the resulting array
-$3 - boolean: sortMerge - set to true if you want the values of the merged result array to be sorted alphabetically
+$2 - boolean: clearEmpty - set to true if you want to remove empty index values from the resulting array
+$3 - boolean: unique - set to true if you want no duplicate values in the resulting array
+$4 - boolean: sortMerge - set to true if you want the values of the merged result array to be sorted alphabetically
 */
 
 %success = $false
 if ($typeOf($0) == array) {%arr1 = $0;}
 if ($typeOf($1) == array) {%arr2 = $1;}
-if ($typeOf($2) == boolean) {%unique = $2;}
-if ($typeOf($3) == boolean) {%sortMerge = $3;}
+if ($typeOf($2) == boolean) {%clearEmpty = $2;}
+if ($typeOf($3) == boolean) {%unique = $3;}
+if ($typeOf($4) == boolean) {%sortMerge = $4;}
 
 if (%arr1 && %arr2)
 {
 	%arr1Length = %arr1[]#
 	%diff = 0
+	%n = 0;
 	for (%i = 0; %i < %arr2[]#; %i++)
 	{
-		if (!$isEmpty(%arr2[%i]))
+		if (%unique)
 		{
-			if (%unique)
-			{
-				if (!$str.grep(%arr2[%i],%arr1))
-				{
-					%arr1[$(%arr1Length + %i - %diff)] = %arr2[%i];
-				}
-				else
-				{
-					%diff++
-				}
-			}
-			else
+			if ($str.grep(%arr2[%i],%arr1) == $false)
 			{
 				%arr1[$(%arr1Length + %i - %diff)] = %arr2[%i];
 			}
+			else
+			{
+				%diff++
+			}
 		}
+		else
+		{
+			%arr1[$(%arr1Length + %i - %diff)] = %arr2[%i];
+		}
+	}
+	if (%clearEmpty)
+	{
+		for (%i = 0; %i < %arr1[]#; %i++)
+		{
+			if (%arr1[%i] != $null)
+			{
+				%temp[%n] = %arr1[%i]
+				%n++
+			}
+		}
+		%arr1 = %temp
 	}
 	if (%sortMerge)
 	{
