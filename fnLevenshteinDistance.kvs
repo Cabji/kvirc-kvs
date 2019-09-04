@@ -12,8 +12,8 @@
 
 clear
 
-%string1 = sitting
-%string2 = kitten
+%string1 = Sunday
+%string2 = Saturday
 
 %s1 = %G_hush->%common->$fnArrayRemoveEmptyValues($str.split("",%string1))
 %s2 = %G_hush->%common->$fnArrayRemoveEmptyValues($str.split("",%string2))
@@ -75,6 +75,7 @@ for (%i = 0; %i < $length(%s1); %i++)
 	}
 }
 
+# output the levenshtein distance matrix
 %o = "  "
 foreach (%char, %s2)
 {
@@ -93,3 +94,9 @@ for (%i = 0; %i < $length(%s1); %i++)
 	}
 	echo %o
 }
+
+# convert the levenshtein distance cost into a percentage (float from 0 to 1)
+%similarity = $(%s1[]# - %ldMatrix[$(%s1[]# - 1)][$(%s2[]# - 1)])
+%simPercent = $(%similarity / $real(%s1[]#))
+echo similarity: %similarity
+echo simPercent: %simPercent
