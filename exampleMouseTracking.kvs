@@ -1,0 +1,58 @@
+/* This is a small example to demonstrate how Mouse Tracking can be done in KVS.
+
+  This code can be copy and pasted into the Script Tester and press Execute button to run the program.
+  
+  The program will build a window that has a 'canvas' area at the bottom. When the mouse cursor is rolled 
+  over the lower area of the program window, 2 labels are updated to show the cursor's X,Y position 
+  relative to the canvas area.
+  
+  Simple breakdown of the code: 
+    1. Class (kvsApp) is defined
+    2. kvsApp Constructor is defined
+    3. GUI widgets are declared (widget geometry, labels, canvasArea, layout)
+    4. privateimpl of mouseMoveEvent handler for the canvasArea widget is declared
+      1. In the privateimpl, the lblX and lblY objects are accessed using the $$->$parent function.
+         "the parent of the canvasArea, which is %kvsApp, therefore %kvsApp->%lblX and lblY" are accessed
+         and their text values are updated.
+    5. Create a kvsApp object and show it on screen.
+
+*/
+
+clear
+
+class (kvsApp, widget)
+{
+	function constructor()
+	{
+		@%ary_appGeom[] = $array(100,100,500,500)
+	
+		@$setGeometry(@%ary_appGeom)
+
+		@%lblX = $new(label, $$, 'kvsApp label Mouse X')
+		@%lblX->$setText("X: ")
+
+		@%lblY = $new(label, $$, 'kvsApp label Mouse Y')
+		@%lblY->$setText("Y: ")
+
+		@%canvasArea = $new(widget, $$, 'kvsApp Canvas Area')
+		@%canvasArea->$setBackgroundColor("FF0000")
+		@%canvasArea->$setMouseTracking($true)
+
+		@%l0 = $new(layout, $$, 'kvsApp Main layout')
+		@%l0->$addMultiCellWidget(@%lblX, 0,0,0,0)
+		@%l0->$addMultiCellWidget(@%lblY, 1,1,0,0)
+		@%l0->$addMultiCellWidget(@%canvasArea, 2,2,0,0)
+
+		privateimpl(@%canvasArea, mouseMoveEvent)
+		{
+			# note that arguments $0 and $1 hold the mouse X,Y positions relative to the tracked widget below the mouse
+			# $globalCursorX and $globalCursorY return the mouse X,Y position relative to the entire screen.
+			$$->$parent->%lblX->$setText("X: $0")
+			$$->$parent->%lblY->$setText("Y: $1")
+		}
+	}
+}
+
+
+%kvsApp = $new(kvsApp, 0, 'kvsApp Main')
+%kvsApp->$show()
