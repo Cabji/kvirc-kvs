@@ -24,7 +24,7 @@
 %PumIds{"%subMenu->$insertItem("Extra stuff 4", 305)"} = "Extra stuff 4"
 %PumIds{"%subMenu->$insertItem("Extra stuff 5", 306)"} = "Extra stuff 5"
 
-// creat the primary popup menu, child of %Kapp widget
+// create the primary popup menu, child of %Kapp widget
 %Kapp->%pumOppClick = $new(popupmenu, %Kapp)
 %Kapp->%pumOppClick->$setTitle("Popup Menu")
 %PumIds{"%Kapp->%pumOppClick->$insertItem("File", $icon("file"))"} = "File"
