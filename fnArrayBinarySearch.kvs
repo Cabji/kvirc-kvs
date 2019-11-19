@@ -1,0 +1,60 @@
+/* This function will binary search an array's values and return a result depending on the flag parameter
+
+	YOU MUST PASS THIS FUNCTION A SORTED ARRAY FOR IT TO WORK CORRECTLY
+
+$0 - (string) string: the token to search for
+$1 - (array) array: the array to search
+$2 - (string) returnFlag: a modifier flag to change what we return as the return value
+	the flag options are: 
+	 value - returns the value we found in array that matches string
+	 index - returns the index number of the value we found in array that matches string
+	if no flag is passed index is the default.
+$3 - (string) matchModifier: modifier flags that can be used for $str.match function, alters how the search matching is done
+	default is 'e' (exact match)
+$4 - (bool) caseSensitivity: if true the search is case sensitive
+	default is $false (case insensitive)
+
+DEV-NOTE: THIS FUNCTION RETURNS boolean $false IF NO MATCH IS FOUND. The calling code __MUST__ check the type of the returned 
+value with $typeOf to see if it is a boolean since the value 0 can be a valid return value from this function!
+*/
+
+%string = $0
+%array = $1
+
+if ($2) %flag = $2; else %flag = index;
+if ($3) %matchMod = $3; else %matchMod = e;
+if ($4) %caseSense = $4; else %caseSense = $false;
+
+%noMatch = $true
+%return = $false
+
+
+// A iterative binary search function. It returns 
+// location of x in given array arr[l..r] if present, 
+// otherwise -1 
+
+if (%string && $typeOf(%array) == array)
+{
+	%l = 0
+	%r = $(%array[]#)
+	while (%l <= %r)
+	{ 
+		%m = $(%l + (%r - %l) / 2); 
+		if ($str.match(%string,%array[%m],%matchMod,%caseSense))
+		{
+			switch(%flag)
+			{
+				case(value):
+				%return = %array[%m];
+				break;
+				default:
+				%return = %m;
+				break;
+			}
+		}  
+		if (%array[%m] < %string) {%l = $(%m + 1);}
+		else {%r = $(%m - 1);}
+	}
+	// if we reach here, then element was not found
+	return %return;
+}
