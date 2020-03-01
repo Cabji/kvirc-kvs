@@ -2,6 +2,8 @@
 
 	YOU CAN PASS THIS FUNCTION AN UNSORTED ARRAY
 
+$fnArrayIterativeSearch(<search:string>,<array:array>,[returnFlag:string=index],[matchModifier:string=e],[caseSensitive:bool=$false])
+
 $0 - (string) string: the token to search for
 $1 - (array) array: the array to search
 $2 - (string) returnFlag: a modifier flag to change what we return as the return value
